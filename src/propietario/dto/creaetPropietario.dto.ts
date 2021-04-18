@@ -35,9 +35,6 @@ export class CreatePropietario {
   tienda: string;
 
   @IsPhoneNumber('PR')
-  telefono: number;
-
-  @IsPhoneNumber('PR')
   celular: number;
 
   @IsString()
