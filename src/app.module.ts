@@ -8,6 +8,7 @@ import { CategoriaModule } from './categoria/categoria.module';
 import { UsuarioModule } from './usuario/usuario.module';
 import { RolesModule } from './roles/roles.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [

@@ -39,4 +39,15 @@ export class PropietarioService {
     const deleted = await this.propietarioModel.findByIdAndDelete(id);
     return deleted;
   }
+
+  async setAvatar(userId: number, avatarUrl: string) {
+    const avatar = await this.propietarioModel.findByIdAndUpdate(
+      userId,
+      {
+        logo: avatarUrl,
+      },
+      { new: true },
+    );
+    return avatar;
+  }
 }

@@ -7,6 +7,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+
 import { CreateUsuarioDTO } from './dtos/usuario.dto';
 import { UsuarioService } from './usuario.service';
 

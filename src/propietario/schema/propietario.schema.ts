@@ -15,5 +15,5 @@ export const PropietarioSchema = new Schema({
   telefono: String,
   celular: Number,
   descripcion: String,
-  logo: String,
+  logo: { type: String, default: 'imagen' },
 });
