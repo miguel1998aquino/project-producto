@@ -10,7 +10,7 @@ export class RolesService {
 
   async create(createDto: CreateRolDto): Promise<Rol> {
     const create = new this.rolModel(createDto);
-    return create.save();
+    return await create.save();
   }
 
   async getRol(id: string): Promise<Rol> {
