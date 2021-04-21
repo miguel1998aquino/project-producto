@@ -16,13 +16,15 @@ export class ProductoService {
     return await create.save();
   }
 
-  async getProductos(paginationQuery: PaginationQueryDto): Promise<Producto[]> {
-    const { limit, offset } = paginationQuery;
-    return await this.productoModel
+  async getProductos(paginationQuery: PaginationQueryDto): Promise<any> {
+    const { limit, page } = paginationQuery;
+    const total = await this.productoModel.find().countDocuments();
+    const paginate = await this.productoModel
       .find()
-      .skip(Number(offset))
+      .skip(Number(page))
       .limit(Number(limit))
       .exec();
+    return { paginate, total, pages: total / limit };
   }
   async getProductosPropietarios(
     propietario: string,
