@@ -5,6 +5,7 @@ export interface Propietario extends Document {
   readonly apellido: string;
   readonly direccion: string;
   readonly correo: string;
+  password: string;
   readonly facebook: string;
   readonly instagran: string;
   readonly ticktock: string;
@@ -12,8 +13,8 @@ export interface Propietario extends Document {
   readonly twiter: string;
   readonly ruc: string;
   readonly tienda: string;
-  readonly telefono: string;
   readonly celular: number;
   readonly descripcion: string;
+  readonly roles: string[];
   readonly logo: string;
 }

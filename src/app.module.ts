@@ -9,6 +9,7 @@ import { UsuarioModule } from './usuario/usuario.module';
 import { RolesModule } from './roles/roles.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MulterModule } from '@nestjs/platform-express';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { MulterModule } from '@nestjs/platform-express';
     CategoriaModule,
     UsuarioModule,
     RolesModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

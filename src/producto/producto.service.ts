@@ -52,4 +52,15 @@ export class ProductoService {
     const deleted = await this.productoModel.findByIdAndDelete(id);
     return deleted;
   }
+
+  async setAvatar(userId: number, avatarUrl: string) {
+    const avatar = await this.productoModel.findByIdAndUpdate(
+      userId,
+      {
+        imagen: avatarUrl,
+      },
+      { new: true },
+    );
+    return avatar;
+  }
 }
