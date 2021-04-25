@@ -8,12 +8,16 @@ import {
   Put,
   Query,
   Res,
+  UnauthorizedException,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { PropietarioDecorator } from 'src/auth/decorator/propietario.decorator';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { PaginationQueryDto } from './dto/pagination.dto';
 import { CreateProducto } from './dto/producto.dto';
 import { ProductoService } from './producto.service';
@@ -39,35 +43,74 @@ export class ProductoController {
     return { productos };
   }
   @Get(':id')
-  async getPropietario(@Param('id') id: string) {
+  async getProducto(@Param('id') id: string) {
     const data = await this.productoService.getProducto(id);
     return { data };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('create')
-  async create(@Body() dto: CreateProducto) {
-    const created = await this.productoService.create(dto);
+  async create(
+    @Body() dto: CreateProducto,
+    @PropietarioDecorator() propietarios: any,
+  ) {
+    const re = {
+      nombre: dto.nombre,
+      descripcion: dto.descripcion,
+      imagen: dto.imagen,
+      precio: dto.precio,
+      propietario: propietarios._id,
+      categoria: dto.categoria,
+    };
+
+    const created = await this.productoService.create(re);
     return {
       message: 'CREADO CON EXITO',
       created,
     };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
-  async getProducto(@Param('id') id: number, @Body() edit: CreateProducto) {
-    const data = await this.productoService.editṔroducto(id, edit);
-    return {
-      message: 'EDITADO CON EXITO',
-      data,
-    };
+  async editProducto(
+    @Param('id') id: string,
+    @Body() edit: CreateProducto,
+    @PropietarioDecorator() propietarios: any,
+  ) {
+    const comparar = await this.productoService.compararProduct(
+      id,
+      propietarios._id,
+    );
+    if (comparar.length == 1) {
+      const data = await this.productoService.editṔroducto(id, edit);
+      return {
+        message: 'EDITADO CON EXITO',
+        data,
+      };
+    } else {
+      throw new UnauthorizedException('No eres el propietario');
+    }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async delete(@Param('id') id: number) {
-    const deleted = await this.productoService.delete(id);
-    return { message: 'ELIMINADO CON EXITO', deleted };
+  async delete(
+    @Param('id') id: string,
+    @PropietarioDecorator() propietarios: any,
+  ) {
+    const comparar = await this.productoService.compararProduct(
+      id,
+      propietarios._id,
+    );
+    if (comparar.length == 1) {
+      const deleted = await this.productoService.delete(id);
+      return { message: 'ELIMINADO CON EXITO', deleted };
+    } else {
+      throw new UnauthorizedException('No eres el propietario');
+    }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post(':id/upload')
   @UseInterceptors(
     FileInterceptor('file', {
@@ -83,7 +126,7 @@ export class ProductoController {
       }),
     }),
   )
-  async uploadFile(@Param('id') id: number, @UploadedFile() file) {
+  async uploadFile(@Param('id') id: string, @UploadedFile() file) {
     console.log(file);
     const image = await this.productoService.setAvatar(id, file.filename);
     return {

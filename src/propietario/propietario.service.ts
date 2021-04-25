@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { CreatePropietario } from './dto/creaetPropietario.dto';
 import { Propietario } from './interface/propietario.interface';
 
+export type Userfind = any;
 @Injectable()
 export class PropietarioService {
   constructor(
@@ -31,6 +32,7 @@ export class PropietarioService {
   ): Promise<Propietario> {
     const Edit = await this.propietarioModel.findByIdAndUpdate(id, editPro, {
       new: true,
+      useFindAndModify: false,
     });
     return Edit;
   }
@@ -46,8 +48,12 @@ export class PropietarioService {
       {
         logo: avatarUrl,
       },
-      { new: true },
+      { new: true, useFindAndModify: false },
     );
     return avatar;
+  }
+
+  async findOne(correo: string): Promise<Userfind | undefined> {
+    return await this.propietarioModel.findOne({ correo });
   }
 }

@@ -6,7 +6,11 @@ import {
   Param,
   Post,
   Put,
+  UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
+import { PropietarioDecorator } from 'src/auth/decorator/propietario.decorator';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CreatePedido } from './dto/pedido.dto';
 import { PedidoService } from './pedido.service';
 
@@ -39,15 +43,40 @@ export class PedidoController {
     };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
-  async Edit(@Param('id') id: number, @Body() edit: CreatePedido) {
-    const Edit = await this.pedidoService.editCategoria(id, edit);
-    return { message: 'Editado con exito', Edit };
+  async Edit(
+    @Param('id') id: string,
+    @Body() edit: CreatePedido,
+    @PropietarioDecorator() propietarios: any,
+  ) {
+    const comparar = await this.pedidoService.compararProduct(
+      id,
+      propietarios._id,
+    );
+    if (comparar.length == 1) {
+      const Edit = await this.pedidoService.editCategoria(id, edit);
+      return { message: 'Editado con exito', Edit };
+    } else {
+      throw new UnauthorizedException('No eres el propietario');
+    }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async delete(@Param('id') id: number) {
-    const deleted = await this.pedidoService.delete(id);
-    return { message: 'Eliminado con exito', deleted };
+  async delete(
+    @Param('id') id: string,
+    @PropietarioDecorator() propietarios: any,
+  ) {
+    const comparar = await this.pedidoService.compararProduct(
+      id,
+      propietarios._id,
+    );
+    if (comparar.length == 1) {
+      const deleted = await this.pedidoService.delete(id);
+      return { message: 'Eliminado con exito', deleted };
+    } else {
+      throw new UnauthorizedException('No eres el propietario');
+    }
   }
 }

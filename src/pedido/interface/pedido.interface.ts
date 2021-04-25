@@ -8,4 +8,5 @@ export interface Pedido extends Document {
   readonly celular: number;
   readonly email: string;
   readonly producto: string;
+  readonly propietario: string;
 }

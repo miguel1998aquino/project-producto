@@ -6,7 +6,11 @@ import {
   Param,
   Post,
   Put,
+  UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
+import { PropietarioDecorator } from 'src/auth/decorator/propietario.decorator';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CategoriaService } from './categoria.service';
 import { CreateCategoria } from './dto/categoria.dto';
 
@@ -22,6 +26,7 @@ export class CategoriaController {
     };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('create')
   async created(@Body() dto: CreateCategoria) {
     const created = await this.Serviecategoria.create(dto);
@@ -37,15 +42,32 @@ export class CategoriaController {
     return { Categoria };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
-  async edited(@Param('id') id: number, @Body() edit: CreateCategoria) {
-    const data = await this.Serviecategoria.editCategoria(id, edit);
-    return { message: 'EDITADO CON EXITO', data };
+  async edited(
+    @Param('id') id: number,
+    @Body() edit: CreateCategoria,
+    @PropietarioDecorator() propietario: any,
+  ) {
+    if (propietario.roles.rolNombre.indexOf('admin') == 0) {
+      const data = await this.Serviecategoria.editCategoria(id, edit);
+      return { message: 'EDITADO CON EXITO', data };
+    } else {
+      throw new UnauthorizedException('No eres Admin');
+    }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async delete(@Param('id') id: number) {
-    const deleted = await this.Serviecategoria.deleted(id);
-    return { message: 'ELIMINADO CON EXITO', deleted };
+  async delete(
+    @Param('id') id: number,
+    @PropietarioDecorator() propietario: any,
+  ) {
+    if (propietario.roles.rolNombre.indexOf('admin') == 0) {
+      const deleted = await this.Serviecategoria.deleted(id);
+      return { message: 'ELIMINADO CON EXITO', deleted };
+    } else {
+      throw new UnauthorizedException('No eres Admin');
+    }
   }
 }

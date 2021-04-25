@@ -20,4 +20,7 @@ export class CreatePedido {
 
   @IsString()
   producto: string;
+
+  @IsString()
+  propietario: string;
 }

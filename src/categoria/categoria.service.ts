@@ -31,6 +31,7 @@ export class CategoriaService {
   ): Promise<Categoria> {
     const Edit = await this.categoriaModel.findByIdAndUpdate(id, editCat, {
       new: true,
+      useFindAndModify: false,
     });
     return Edit;
   }

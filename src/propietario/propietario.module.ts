@@ -12,5 +12,6 @@ import { MongooseModule } from '@nestjs/mongoose';
   ],
   providers: [PropietarioService],
   controllers: [PropietarioController],
+  exports: [PropietarioService],
 })
 export class PropietarioModule {}

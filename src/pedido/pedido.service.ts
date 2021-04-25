@@ -23,14 +23,22 @@ export class PedidoService {
     return pedidos;
   }
 
-  async editCategoria(id: number, edit: CreatePedido): Promise<Pedido> {
+  async editCategoria(id: string, edit: CreatePedido): Promise<Pedido> {
     const Edit = await this.pedidoModel.findByIdAndUpdate(id, edit, {
       new: true,
     });
     return Edit;
   }
 
-  async delete(id: number): Promise<Pedido> {
+  async compararProduct(id: string, propietario: string): Promise<Pedido[]> {
+    const buscar = await this.pedidoModel.find({
+      _id: id,
+      propietario: propietario,
+    });
+    return buscar;
+  }
+
+  async delete(id: string): Promise<Pedido> {
     const Delete = await this.pedidoModel.findByIdAndDelete(id);
     return Delete;
   }

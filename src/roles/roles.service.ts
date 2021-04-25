@@ -26,6 +26,7 @@ export class RolesService {
   async editRol(id: number, edit: CreateRolDto): Promise<Rol> {
     const editado = await this.rolModel.findByIdAndUpdate(id, edit, {
       new: true,
+      useFindAndModify: false,
     });
     return editado;
   }

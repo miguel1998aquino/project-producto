@@ -12,4 +12,9 @@ export const PedidoSchema = new Schema({
     ref: 'Producto',
     autopopulate: true,
   },
+  propietario: {
+    type: Schema.Types.ObjectId,
+    ref: 'Propietario',
+    autopopulate: true,
+  },
 });

@@ -5,7 +5,6 @@ import { PropietarioModule } from './propietario/propietario.module';
 import { ProductoModule } from './producto/producto.module';
 import { PedidoModule } from './pedido/pedido.module';
 import { CategoriaModule } from './categoria/categoria.module';
-import { UsuarioModule } from './usuario/usuario.module';
 import { RolesModule } from './roles/roles.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MulterModule } from '@nestjs/platform-express';
@@ -23,7 +22,6 @@ import { AuthModule } from './auth/auth.module';
     ProductoModule,
     PedidoModule,
     CategoriaModule,
-    UsuarioModule,
     RolesModule,
     AuthModule,
   ],

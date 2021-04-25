@@ -41,25 +41,33 @@ export class ProductoService {
     const producto = await this.productoModel.findById(id);
     return producto;
   }
-  async editṔroducto(id: number, edit: CreateProducto): Promise<Producto> {
+  async editṔroducto(id: string, edit: CreateProducto): Promise<Producto> {
     const editProducto = await this.productoModel.findByIdAndUpdate(id, edit, {
       new: true,
+      useFindAndModify: false,
     });
     return editProducto;
   }
+  async compararProduct(id: string, propietario: string): Promise<Producto[]> {
+    const buscar = await this.productoModel.find({
+      _id: id,
+      propietario: propietario,
+    });
+    return buscar;
+  }
 
-  async delete(id: number): Promise<Producto> {
+  async delete(id: string): Promise<Producto> {
     const deleted = await this.productoModel.findByIdAndDelete(id);
     return deleted;
   }
 
-  async setAvatar(userId: number, avatarUrl: string) {
+  async setAvatar(userId: string, avatarUrl: string) {
     const avatar = await this.productoModel.findByIdAndUpdate(
       userId,
       {
         imagen: avatarUrl,
       },
-      { new: true },
+      { new: true, useFindAndModify: false },
     );
     return avatar;
   }

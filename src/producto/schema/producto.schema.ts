@@ -15,4 +15,5 @@ export const ProductoSchema = new Schema({
     ref: 'Categoria',
     autopopulate: true,
   },
+  created_at: { type: Date, default: Date.now },
 });
